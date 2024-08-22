@@ -72,3 +72,25 @@ FROM spotifydata
 GROUP BY artist_name
 ORDER BY liveness DESC 
 LIMIT 5;
+
+--Calculate the average popularity for the artists in the Spotify data table. Then, for every artist with an average popularity of 90 or above, show their name, their average popularity, and label them as a “Top Star". 
+WITH popularity_average AS 
+(Select AVG(s.popularity)AS average_popularity, s.artist_name
+FROM Spotifydata s
+GROUP BY s.artist_name
+)
+
+SELECT artist_name, average_popularity, "Top Star" AS tag
+FROM popularity_average
+WHERE average_popularity >= 90;
+
+
+--What's the average danceability for the 5 most popular songs?
+WITH five_popular_tracks_table AS 
+(Select s.track_name, s.popularity, s.danceability
+FROM spotifydata s
+GROUP BY s.track_name 
+ORDER BY s.popularity desc LIMIT 5)
+
+Select AVG(danceability)
+FROM five_popular_tracks_table;
